@@ -1,84 +1,97 @@
 let tareas = [];
 let idActual = 1;
+let tareaDragId = null;
 
 function crearTarea() {
-    const nombre = document.getElementById('nombre').value;
-    const descripcion = document.getElementById('descripcion').value;
-    const estado = document.getElementById('estado').value;
+    const nombre = document.getElementById('nombre').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
     const fechaEntrega = document.getElementById('fechaEntrega').value;
-    if (!nombre || !descripcion || !estado || !fechaEntrega) {
+    if (!nombre || !descripcion || !fechaEntrega) {
         alert("Todos los campos son obligatorios.");
         return;
     }
-    const tarea = { id: idActual++, nombre, descripcion, estado, fechaEntrega };
+    const tarea = {
+        id: idActual++,
+        nombre,
+        descripcion,
+        estado: "Por hacer",
+        fechaEntrega
+    };
     tareas.push(tarea);
-    volverMenu();
-}
-
-function mostrarCrearTarea() {
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('crear-tarea').style.display = 'block';
-    document.getElementById('listar-tareas').style.display = 'none';
-}
-
-function mostrarListarTareas() {
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('crear-tarea').style.display = 'none';
-    document.getElementById('listar-tareas').style.display = 'block';
-    renderizarTablaTareas();
-}
-
-function volverMenu() {
-    document.getElementById('menu').style.display = 'block';
-    document.getElementById('crear-tarea').style.display = 'none';
-    document.getElementById('listar-tareas').style.display = 'none';
     limpiarFormulario();
+    renderizarKanban();
 }
 
 function limpiarFormulario() {
     document.getElementById('nombre').value = '';
     document.getElementById('descripcion').value = '';
-    document.getElementById('estado').value = 'Por hacer';
     document.getElementById('fechaEntrega').value = '';
 }
 
-function renderizarTablaTareas() {
-    const tbody = document.querySelector('#tabla-tareas tbody');
-    tbody.innerHTML = '';
-    for (let i = 0; i < tareas.length; i++) {
-        const t = tareas[i];
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${t.id}</td>
-            <td>${t.nombre}</td>
-            <td>${t.estado}</td>
-            <td>
-                <button onclick="eliminarTarea(${t.id})">Eliminar</button>
-                <button onclick="mostrarCambioEstado(${t.id})">Cambiar estado</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    }
+function renderizarKanban() {
+    const estados = ["Por hacer", "En progreso", "Completada"];
+    estados.forEach(estado => {
+        const contenedor = document.getElementById(`tareas-${estado.toLowerCase().replace(' ', '-')}`);
+        contenedor.innerHTML = '';
+        const tareasEstado = tareas.filter(t => t.estado === estado);
+        for (let i = 0; i < tareasEstado.length; i++) {
+            const t = tareasEstado[i];
+            const div = document.createElement('div');
+            div.className = 'tarea';
+            div.draggable = true;
+            div.id = `tarea-${t.id}`;
+            div.ondragstart = (e) => drag(e, t.id);
+            div.ondragend = (e) => dragEnd(e);
+
+            let emoji = "📝";
+            if (estado === "En progreso") emoji = "🚧";
+            if (estado === "Completada") emoji = "✅";
+
+            div.innerHTML = `
+                <div class="acciones">
+                    <button onclick="eliminarTarea(${t.id})" title="Eliminar">🗑️</button>
+                </div>
+                <strong>${emoji} ${t.nombre}</strong>
+                <div>${t.descripcion}</div>
+                <div class="fecha">📅 ${t.fechaEntrega}</div>
+            `;
+            contenedor.appendChild(div);
+        }
+    });
 }
 
 function eliminarTarea(id) {
-    for (let i = 0; i < tareas.length; i++) {
-        if (tareas[i].id === id) {
-            tareas.splice(i, 1);
-            break;
-        }
-    }
-    renderizarTablaTareas();
+    tareas = tareas.filter(t => t.id !== id);
+    renderizarKanban();
 }
 
-function mostrarCambioEstado(id) {
-    const tarea = tareas.find(t => t.id === id);
-    if (!tarea) return;
-    const nuevoEstado = prompt("Ingrese el nuevo estado:\n1. En progreso\n2. Completada");
-    if (nuevoEstado === "1") {
-        tarea.estado = "En progreso";
-    } else if (nuevoEstado === "2") {
-        tarea.estado = "Completada";
-    }
-    renderizarTablaTareas();
+// Drag & Drop
+function allowDrop(ev) {
+    ev.preventDefault();
 }
+
+function drag(ev, id) {
+    tareaDragId = id;
+    ev.currentTarget.classList.add('dragging');
+}
+
+function dragEnd(ev) {
+    ev.currentTarget.classList.remove('dragging');
+}
+
+function drop(ev, nuevoEstado) {
+    ev.preventDefault();
+    if (tareaDragId !== null) {
+        for (let i = 0; i < tareas.length; i++) {
+            if (tareas[i].id === tareaDragId) {
+                tareas[i].estado = nuevoEstado;
+                break;
+            }
+        }
+        tareaDragId = null;
+        renderizarKanban();
+    }
+}
+
+// Inicializar tablero al cargar
+window.onload = renderizarKanban;

@@ -1,93 +1,186 @@
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    /* Fondo animado con gradientes y formas */
+    background: radial-gradient(circle at 20% 20%, #f59e42 0%, #f43f5e 30%, transparent 70%),
+                radial-gradient(circle at 80% 80%, #38bdf8 0%, #6366f1 40%, transparent 80%),
+                linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 h1 {
-    color: #3b82f6;
+    color: #7c3aed;
     text-align: center;
     margin-top: 30px;
-    font-size: 2.2em;
+    font-size: 2.5em;
     letter-spacing: 2px;
+    text-shadow: 1px 2px 8px #e0e7ff;
 }
 
-h2 {
-    color: #6366f1;
-    margin-bottom: 10px;
+.crear-tarea {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0 30px 0;
 }
 
-#menu, #crear-tarea, #listar-tareas {
+.crear-tarea input, .crear-tarea button {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1.5px solid #a78bfa;
+    font-size: 1em;
+    background: #f3e8ff;
+}
+
+.crear-tarea button {
+    background: linear-gradient(90deg, #f59e42 0%, #f43f5e 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-weight: bold;
+}
+
+.crear-tarea button:hover {
+    background: linear-gradient(90deg, #f43f5e 0%, #f59e42 100%);
+    transform: scale(1.07);
+}
+
+#kanban {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0 20px;
+}
+
+.columna {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
-    max-width: 400px;
-    margin: 30px auto;
-    padding: 30px 25px 25px 25px;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(59,130,246,0.13);
+    width: 340px;
+    min-height: 440px;
+    padding: 22px 16px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 8px solid #f59e42;
+    position: relative;
 }
 
-button {
-    background: #6366f1;
+#por-hacer {
+    border-top: 8px solid #f59e42;
+}
+#en-progreso {
+    border-top: 8px solid #38bdf8;
+}
+#completada {
+    border-top: 8px solid #22c55e;
+}
+
+.columna h2 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#por-hacer h2::before { content: "📝"; }
+#en-progreso h2::before { content: "🚧"; }
+#completada h2::before { content: "✅"; }
+
+.tareas {
+    width: 100%;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.tarea {
+    background: linear-gradient(90deg, #fef9c3 0%, #f3e8ff 100%);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(59,130,246,0.12);
+    padding: 16px 14px 14px 14px;
+    cursor: grab;
+    border-left: 8px solid #f59e42;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    font-size: 1.08em;
+    animation: fadeIn 0.4s;
+}
+
+#en-progreso .tarea {
+    border-left: 8px solid #38bdf8;
+    background: linear-gradient(90deg, #bae6fd 0%, #f3e8ff 100%);
+}
+#completada .tarea {
+    border-left: 8px solid #22c55e;
+    background: linear-gradient(90deg, #bbf7d0 0%, #f3e8ff 100%);
+}
+
+.tarea.dragging {
+    opacity: 0.5;
+    box-shadow: 0 0 0 3px #6366f1;
+}
+
+.tarea strong {
+    color: #f43f5e;
+    font-size: 1.15em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tarea .fecha {
+    font-size: 0.95em;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.tarea .acciones {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.tarea .acciones button {
+    background: #f43f5e;
     color: #fff;
     border: none;
     border-radius: 6px;
-    padding: 8px 16px;
-    margin: 8px 4px 0 0;
+    padding: 3px 10px;
     font-size: 1em;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s;
+    font-weight: bold;
 }
 
-button:hover {
-    background: #3b82f6;
+.tarea .acciones button:hover {
+    background: #be185d;
+    transform: scale(1.1);
 }
 
-input, select {
-    width: 95%;
-    padding: 7px;
-    margin: 7px 0;
-    border: 1px solid #cbd5e1;
-    border-radius: 5px;
-    font-size: 1em;
-    background: #f1f5f9;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
 }
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 15px;
-    background: #f8fafc;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-th, td {
-    border: 1px solid #e5e7eb;
-    padding: 10px 8px;
-    text-align: left;
-}
-
-th {
-    background: #6366f1;
-    color: #fff;
-    font-weight: 500;
-}
-
-tr:nth-child(even) {
-    background: #e0e7ff;
-}
-
-tr:nth-child(odd) {
-    background: #f1f5f9;
-}
-
-@media (max-width: 600px) {
-    #menu, #crear-tarea, #listar-tareas {
-        max-width: 98vw;
-        padding: 15px 5vw;
+@media (max-width: 1100px) {
+    #kanban {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
     }
-    table, th, td {
-        font-size: 0.95em;
+    .columna {
+        width: 95vw;
+        min-width: 220px;
     }
 }
