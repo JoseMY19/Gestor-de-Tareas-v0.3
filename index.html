@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Tareas</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <h1>Gestor de Tareas</h1>
+    <div id="menu">
+        <button onclick="mostrarCrearTarea()">Crear nueva tarea</button>
+        <button onclick="mostrarListarTareas()">Listar tareas</button>
+    </div>
+    <div id="crear-tarea" style="display:none;">
+        <h2>Crear Tarea</h2>
+        <input type="text" id="nombre" placeholder="Nombre"><br>
+        <input type="text" id="descripcion" placeholder="Descripción"><br>
+        <select id="estado">
+            <option value="Por hacer">Por hacer</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Completada">Completada</option>
+        </select><br>
+        <input type="date" id="fechaEntrega"><br>
+        <button onclick="crearTarea()">Guardar</button>
+        <button onclick="volverMenu()">Volver</button>
+    </div>
+    <div id="listar-tareas" style="display:none;">
+        <h2>Lista de Tareas</h2>
+        <table id="tabla-tareas">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button onclick="volverMenu()">Volver</button>
+    </div>
+    <script src="tareas.js"></script>
+</body>
+</html>

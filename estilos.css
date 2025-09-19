@@ -1,0 +1,93 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #3b82f6;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 2.2em;
+    letter-spacing: 2px;
+}
+
+h2 {
+    color: #6366f1;
+    margin-bottom: 10px;
+}
+
+#menu, #crear-tarea, #listar-tareas {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 30px 25px 25px 25px;
+}
+
+button {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    margin: 8px 4px 0 0;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #3b82f6;
+}
+
+input, select {
+    width: 95%;
+    padding: 7px;
+    margin: 7px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    font-size: 1em;
+    background: #f1f5f9;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    border: 1px solid #e5e7eb;
+    padding: 10px 8px;
+    text-align: left;
+}
+
+th {
+    background: #6366f1;
+    color: #fff;
+    font-weight: 500;
+}
+
+tr:nth-child(even) {
+    background: #e0e7ff;
+}
+
+tr:nth-child(odd) {
+    background: #f1f5f9;
+}
+
+@media (max-width: 600px) {
+    #menu, #crear-tarea, #listar-tareas {
+        max-width: 98vw;
+        padding: 15px 5vw;
+    }
+    table, th, td {
+        font-size: 0.95em;
+    }
+}
